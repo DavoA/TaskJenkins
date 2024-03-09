@@ -3,8 +3,8 @@ pipeline {
     triggers {
         GenericTrigger(
             genericVariables: [
-                [key: 'targetBranchName', value: '$.body.pull_request.base.ref'],
-                [key: 'sourseBranchName', value: '$.body.pull_request.head.ref'],
+                [key: 'targetBranchName', value: '$.pull_request.base.ref'],
+                [key: 'sourseBranchName', value: '$.pull_request.head.ref'],
             ],
             token: 'my-webhook-token'
         )
@@ -13,10 +13,10 @@ pipeline {
         stage('Check branch name') {
             steps {
                 script {
-                    if (env.tagetBranchName != 'dev') {
-                        echo "Branch name is not 'dev', proceeding with the merge"
+                    if (env.tagetBranchName == 'dev') {
+                        echo "Branch name is 'dev', proceeding with the merge"
                     } else {
-                        error "Merge rejected! Branch name 'dev' is not allowed."
+                        error "Merge rejected!"
                     }
                 }
             }
