@@ -3,7 +3,7 @@ pipeline {
     triggers {
         GenericTrigger(
             genericVariables: [
-                [key: 'branchName', value: '$.body.ref'],
+                [key: 'branchName', value: '$.body.head.ref'],
             ],
             token: 'my-webhook-token'
         )
