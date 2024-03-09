@@ -3,7 +3,8 @@ pipeline {
     triggers {
         GenericTrigger(
             genericVariables: [
-                [key: 'branchName', value: '$.body.ref'],
+                [key: 'targetBranchName', value: '$.body.base.ref'],
+                [key: 'sourseBranchName', value: '$.body.head.ref'],
             ],
             token: 'my-webhook-token'
         )
@@ -12,7 +13,7 @@ pipeline {
         stage('Check branch name') {
             steps {
                 script {
-                    if (env.branchName != 'refs/heads/dev') {
+                    if (env.tagetBranchName != 'dev') {
                         echo "Branch name is not 'dev', proceeding with the merge"
                     } else {
                         error "Merge rejected! Branch name 'dev' is not allowed."
@@ -23,10 +24,10 @@ pipeline {
         stage('Merge to main') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'davoa-github-pat', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                        git branch: 'main', url: 'https://github.com/DavoA/TaskJenkins.git'
+                    withCredentials([usernamePassword(credentialsId: 'davoa-pat', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        git branch: 'dev', url: 'https://github.com/DavoA/TaskJenkins.git'
                         git commit: 'Merging dev into main', url: 'https://github.com/DavoA/TaskJenkins.git'
-                        git mergeRemote: 'origin', remote: 'dev'
+                        git mergeRemote: 'origin', remote: env.sourseBranchName
                     }
                 }
             }
