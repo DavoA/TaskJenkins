@@ -12,7 +12,7 @@ pipeline {
         stage('Check branch name') {
             steps {
                 script {
-                    if (env.branchName != 'refs/heads/dev') {
+                    if (env.branchName != 'dev') {
                         echo "Branch name is not 'dev', proceeding with the merge"
                     } else {
                         error "Merge rejected! Branch name 'dev' is not allowed."
