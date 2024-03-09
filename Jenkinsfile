@@ -6,7 +6,6 @@ pipeline {
                 [key: 'targetBranchName', value: '$.pull_request.base.ref'],
                 [key: 'sourseBranchName', value: '$.pull_request.head.ref'],
             ],
-            token: 'my-webhook-token'
         )
     }
     stages {
